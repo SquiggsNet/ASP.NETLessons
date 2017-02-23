@@ -34,7 +34,10 @@ namespace ScottRafael_NSCCCourseMap.Controllers
                 return NotFound();
             }
 
-            var concentration = await _context.Concentrations.SingleOrDefaultAsync(m => m.Id == id);
+            var concentration = await _context.Concentrations
+                .Include(c => c.Program)
+                .AsNoTracking()
+                .SingleOrDefaultAsync(m => m.Id == id);
             if (concentration == null)
             {
                 return NotFound();
@@ -46,7 +49,8 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         // GET: Concentrations/Create
         public IActionResult Create()
         {
-            ViewData["ProgramId"] = new SelectList(_context.Programs, "Id", "Id");
+            //ViewData["ProgramId"] = new SelectList(_context.Programs, "Id", "Id");
+            PopulateProgramsDropDownList();
             return View();
         }
 
@@ -63,7 +67,8 @@ namespace ScottRafael_NSCCCourseMap.Controllers
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            ViewData["ProgramId"] = new SelectList(_context.Programs, "Id", "Id", concentration.ProgramId);
+            //ViewData["ProgramId"] = new SelectList(_context.Programs, "Id", "Id", concentration.ProgramId);
+            PopulateProgramsDropDownList(concentration.ProgramId);
             return View(concentration);
         }
 
@@ -75,49 +80,61 @@ namespace ScottRafael_NSCCCourseMap.Controllers
                 return NotFound();
             }
 
-            var concentration = await _context.Concentrations.SingleOrDefaultAsync(m => m.Id == id);
+            //var concentration = await _context.Concentrations.SingleOrDefaultAsync(m => m.Id == id);
+            var concentration = await _context.Concentrations.AsNoTracking().SingleOrDefaultAsync(m => m.Id == id);
             if (concentration == null)
             {
                 return NotFound();
             }
-            ViewData["ProgramId"] = new SelectList(_context.Programs, "Id", "Id", concentration.ProgramId);
+            //ViewData["ProgramId"] = new SelectList(_context.Programs, "Id", "Id", concentration.ProgramId);
+            PopulateProgramsDropDownList(concentration.ProgramId);
             return View(concentration);
         }
 
         // POST: Concentrations/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,ProgramId,Title")] Concentration concentration)
+        public async Task<IActionResult> EditPost(int? id)
         {
-            if (id != concentration.Id)
+            if (id == null)
             {
                 return NotFound();
             }
 
-            if (ModelState.IsValid)
+            var concentrationToUpdate = await _context.Concentrations
+                .SingleOrDefaultAsync(c => c.Id == id);
+
+            if (await TryUpdateModelAsync<Concentration>(concentrationToUpdate,
+                "",
+                c => c.ProgramId, c => c.Title))
             {
                 try
                 {
-                    _context.Update(concentration);
                     await _context.SaveChangesAsync();
                 }
-                catch (DbUpdateConcurrencyException)
+                catch (DbUpdateException /* ex */)
                 {
-                    if (!ConcentrationExists(concentration.Id))
-                    {
-                        return NotFound();
-                    }
-                    else
-                    {
-                        throw;
-                    }
+                    //Log the error (uncomment ex variable name and write a log.)
+                    ModelState.AddModelError("", "Unable to save changes. " +
+                        "Try again, and if the problem persists, " +
+                        "see your system administrator.");
                 }
                 return RedirectToAction("Index");
             }
-            ViewData["ProgramId"] = new SelectList(_context.Programs, "Id", "Id", concentration.ProgramId);
-            return View(concentration);
+            //ViewData["ProgramId"] = new SelectList(_context.Programs, "Id", "Id", concentration.ProgramId);
+            PopulateProgramsDropDownList(concentrationToUpdate.ProgramId);
+            return View(concentrationToUpdate);
+        }
+
+        private void PopulateProgramsDropDownList(object selectedProgram = null)
+        {
+            var programsQuery = from p in _context.Programs
+                                   orderby p.Title
+                                   select p;
+            ViewBag.ProgramId = new SelectList(programsQuery.AsNoTracking(), "Id", "Title", selectedProgram);
+            //ViewData["ProgramId"] = new SelectList(_context.Programs, "Id", "Id");
         }
 
         // GET: Concentrations/Delete/5
@@ -128,7 +145,10 @@ namespace ScottRafael_NSCCCourseMap.Controllers
                 return NotFound();
             }
 
-            var concentration = await _context.Concentrations.SingleOrDefaultAsync(m => m.Id == id);
+            var concentration = await _context.Concentrations
+                .Include(c => c.Program)
+                .AsNoTracking()
+                .SingleOrDefaultAsync(m => m.Id == id);
             if (concentration == null)
             {
                 return NotFound();

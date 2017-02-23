@@ -4,10 +4,10 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
+<h2>Concentration Details</h2>
 
 <div>
-    <h4>Concentration</h4>
+
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -15,6 +15,12 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.Title)
+        </dd>
+        <dt>
+            Course Program
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.Program.Title)
         </dd>
     </dl>
 </div>
