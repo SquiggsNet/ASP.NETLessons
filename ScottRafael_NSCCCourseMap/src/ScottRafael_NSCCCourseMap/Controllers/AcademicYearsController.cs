@@ -33,7 +33,11 @@ namespace ScottRafael_NSCCCourseMap.Controllers
                 return NotFound();
             }
 
-            var academicYear = await _context.AcademicYears.SingleOrDefaultAsync(m => m.Id == id);
+            var academicYear = await _context.AcademicYears
+                .Include(a => a.Semesters)
+                .AsNoTracking()
+                .SingleOrDefaultAsync(m => m.Id == id);
+
             if (academicYear == null)
             {
                 return NotFound();

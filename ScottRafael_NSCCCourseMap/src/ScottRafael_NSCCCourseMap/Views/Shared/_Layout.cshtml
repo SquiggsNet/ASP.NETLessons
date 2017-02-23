@@ -33,8 +33,20 @@
                     <li><a asp-area="" asp-controller="Home" asp-action="Index">Home</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="About">About</a></li>
                     <li><a asp-area="" asp-controller="Home" asp-action="Contact">Contact</a></li>
-                    <li><a asp-area="" asp-controller="AcademicYears" asp-action="Contact">Academic Years</a></li>
+                    <li class="dropdown">
+                        <a class="dropdown-toggle" style="margin-right: 5px;" href="#" data-toggle="dropdown">NSCC Course Map<b class="caret"></b></a>
+                        <ul class="dropdown-menu">
+                            <li><a asp-area="" asp-controller="AcademicYears" asp-action="Index">Academic Years</a></li>
+                            <li><a asp-area="" asp-controller="Programs" asp-action="Index">College Programs</a></li>
+                            <li><a asp-area="" asp-controller="Concentrations" asp-action="Index">Concentrations</a></li>
+                            <li><a asp-area="" asp-controller="CourseOfferings" asp-action="Index">Course Offerings</a></li>
+                            <li><a asp-area="" asp-controller="CoursePrerequisites" asp-action="Index">Course Prerequisites</a></li>
+                            <li><a asp-area="" asp-controller="Courses" asp-action="Index">Courses</a></li>
+                            <li><a asp-area="" asp-controller="Semester" asp-action="Index">Semesters</a></li>
+                        </ul>
+                    </li>
                 </ul>
+                
                 @await Html.PartialAsync("_LoginPartial")
             </div>
         </div>
