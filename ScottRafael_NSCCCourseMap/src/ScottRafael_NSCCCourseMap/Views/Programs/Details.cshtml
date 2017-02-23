@@ -1,13 +1,13 @@
-@model ScottRafael_NSCCCourseMap.Models.AcademicYear
+@model ScottRafael_NSCCCourseMap.Models.Program
 
 @{
     ViewData["Title"] = "Details";
 }
 
-<h2>Academic Year Details</h2>
+<h2>College Program Details</h2>
 
 <div>
-
+   
     <hr />
     <dl class="dl-horizontal">
         <dt>
@@ -16,14 +16,14 @@
         <dd>
             @Html.DisplayFor(model => model.Title)
         </dd>
-
+    <hr />
         <dt>
-            @Html.DisplayNameFor(model => model.Semesters)
+            @Html.DisplayNameFor(model => model.Concentrations)
         </dt>
-        @foreach (var item in Model.Semesters)
+        @foreach (var item in Model.Concentrations)
         {
-            <dd>    
-                @Html.DisplayFor(modelItem => item.Name)
+            <dd>
+                @Html.DisplayFor(modelItem => item.Title)
             </dd>
         }
     </dl>
