@@ -10,25 +10,22 @@ using ScottRafael_NSCCCourseMap.Models;
 
 namespace ScottRafael_NSCCCourseMap.Controllers
 {
-    public class AcademicYearsController : Controller
+    public class SemestersController : Controller
     {
         private readonly NSCCCourseMapContext _context;
 
-        public AcademicYearsController(NSCCCourseMapContext context)
+        public SemestersController(NSCCCourseMapContext context)
         {
             _context = context;    
         }
 
-        // GET: AcademicYears
+        // GET: Semesters
         public async Task<IActionResult> Index()
         {
-            var AcademicYears = from a in _context.AcademicYears
-                           select a;
-            AcademicYears = AcademicYears.OrderBy(a => a.Title);
-            return View(await AcademicYears.ToListAsync());
+            return View(await _context.Semesters.ToListAsync());
         }
 
-        // GET: AcademicYears/Details/5
+        // GET: Semesters/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -36,42 +33,38 @@ namespace ScottRafael_NSCCCourseMap.Controllers
                 return NotFound();
             }
 
-            var academicYear = await _context.AcademicYears
-                .Include(a => a.Semesters)
-                .AsNoTracking()
-                .SingleOrDefaultAsync(m => m.Id == id);
-
-            if (academicYear == null)
+            var semester = await _context.Semesters.SingleOrDefaultAsync(m => m.Id == id);
+            if (semester == null)
             {
                 return NotFound();
             }
 
-            return View(academicYear);
+            return View(semester);
         }
 
-        // GET: AcademicYears/Create
+        // GET: Semesters/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: AcademicYears/Create
+        // POST: Semesters/Create
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title")] AcademicYear academicYear)
+        public async Task<IActionResult> Create([Bind("Id,AcademicYearId,EndDate,Name,StartDate")] Semester semester)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(academicYear);
+                _context.Add(semester);
                 await _context.SaveChangesAsync();
                 return RedirectToAction("Index");
             }
-            return View(academicYear);
+            return View(semester);
         }
 
-        // GET: AcademicYears/Edit/5
+        // GET: Semesters/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -79,22 +72,22 @@ namespace ScottRafael_NSCCCourseMap.Controllers
                 return NotFound();
             }
 
-            var academicYear = await _context.AcademicYears.SingleOrDefaultAsync(m => m.Id == id);
-            if (academicYear == null)
+            var semester = await _context.Semesters.SingleOrDefaultAsync(m => m.Id == id);
+            if (semester == null)
             {
                 return NotFound();
             }
-            return View(academicYear);
+            return View(semester);
         }
 
-        // POST: AcademicYears/Edit/5
+        // POST: Semesters/Edit/5
         // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Title")] AcademicYear academicYear)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,AcademicYearId,EndDate,Name,StartDate")] Semester semester)
         {
-            if (id != academicYear.Id)
+            if (id != semester.Id)
             {
                 return NotFound();
             }
@@ -103,12 +96,12 @@ namespace ScottRafael_NSCCCourseMap.Controllers
             {
                 try
                 {
-                    _context.Update(academicYear);
+                    _context.Update(semester);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AcademicYearExists(academicYear.Id))
+                    if (!SemesterExists(semester.Id))
                     {
                         return NotFound();
                     }
@@ -119,10 +112,10 @@ namespace ScottRafael_NSCCCourseMap.Controllers
                 }
                 return RedirectToAction("Index");
             }
-            return View(academicYear);
+            return View(semester);
         }
 
-        // GET: AcademicYears/Delete/5
+        // GET: Semesters/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -130,40 +123,29 @@ namespace ScottRafael_NSCCCourseMap.Controllers
                 return NotFound();
             }
 
-            var academicYear = await _context.AcademicYears.SingleOrDefaultAsync(m => m.Id == id);
-            if (academicYear == null)
+            var semester = await _context.Semesters.SingleOrDefaultAsync(m => m.Id == id);
+            if (semester == null)
             {
                 return NotFound();
             }
 
-            return View(academicYear);
+            return View(semester);
         }
 
-        // POST: AcademicYears/Delete/5
+        // POST: Semesters/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var academicYear = await _context.AcademicYears.SingleOrDefaultAsync(m => m.Id == id);
-            _context.AcademicYears.Remove(academicYear);
+            var semester = await _context.Semesters.SingleOrDefaultAsync(m => m.Id == id);
+            _context.Semesters.Remove(semester);
             await _context.SaveChangesAsync();
             return RedirectToAction("Index");
         }
 
-        private bool AcademicYearExists(int id)
+        private bool SemesterExists(int id)
         {
-            return _context.AcademicYears.Any(e => e.Id == id);
-        }
-
-        [AcceptVerbs("Get", "Post")]
-        public IActionResult VerifyTitle(string title)
-        {
-            if (_context.AcademicYears.Any(a => a.Title == title))
-            {
-                return Json(data: $"The title {title} is already in use.");
-            }
-
-            return Json(data: true);
+            return _context.Semesters.Any(e => e.Id == id);
         }
     }
 }

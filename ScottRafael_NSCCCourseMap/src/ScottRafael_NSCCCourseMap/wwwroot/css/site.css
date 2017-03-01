@@ -48,3 +48,9 @@ textarea {
     display: none
   }
 }
+
+.CourseMapImg{
+    height: 100%;
+    width: 70%;
+    vertical-align: middle;
+}
