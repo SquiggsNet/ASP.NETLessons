@@ -22,8 +22,8 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         // GET: Concentrations
         public async Task<IActionResult> Index()
         {
-            var nSCCCourseMapContext = _context.Concentrations.Include(c => c.Program);
-            return View(await nSCCCourseMapContext.ToListAsync());
+            var Concentrations = _context.Concentrations.Include(c => c.Program);
+            return View(await Concentrations.ToListAsync());
         }
 
         // GET: Concentrations/Details/5

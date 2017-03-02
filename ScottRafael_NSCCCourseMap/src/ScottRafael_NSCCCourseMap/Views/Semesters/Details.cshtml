@@ -4,18 +4,12 @@
     ViewData["Title"] = "Details";
 }
 
-<h2>Details</h2>
+<h2>Semester Details</h2>
 
 <div>
     <h4>Semester</h4>
     <hr />
     <dl class="dl-horizontal">
-        <dt>
-            @Html.DisplayNameFor(model => model.EndDate)
-        </dt>
-        <dd>
-            @Html.DisplayFor(model => model.EndDate)
-        </dd>
         <dt>
             @Html.DisplayNameFor(model => model.Name)
         </dt>
@@ -23,10 +17,22 @@
             @Html.DisplayFor(model => model.Name)
         </dd>
         <dt>
+            Academic Year
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.AcademicYear.Title)
+        </dd>
+        <dt>
             @Html.DisplayNameFor(model => model.StartDate)
         </dt>
         <dd>
             @Html.DisplayFor(model => model.StartDate)
+        </dd>
+        <dt>
+            @Html.DisplayNameFor(model => model.EndDate)
+        </dt>
+        <dd>
+            @Html.DisplayFor(model => model.EndDate)
         </dd>
     </dl>
 </div>
@@ -34,3 +40,42 @@
     <a asp-action="Edit" asp-route-id="@Model.Id">Edit</a> |
     <a asp-action="Index">Back to List</a>
 </div>
+
+<h3>Course Offerings for @Html.DisplayFor(model => model.Name)</h3>
+
+<table class="table">
+   
+        <thead>
+            <tr>
+                <th>
+                    Course
+                </th>
+                <th>
+                    Concentration
+                </th>
+                <th>
+                    Campus Course
+                </th>
+            </tr>
+        </thead>
+    <tbody>
+        @{
+            List<ScottRafael_NSCCCourseMap.Models.NSCCCourseMapViewModels.SemesterCourseDetailsData> courseOfferings = ViewBag.CourseOfferings;
+            foreach (var courseOffering in courseOfferings)
+            {
+                <tr>
+                    <td>@courseOffering.CourseFull</td>
+                    <td>@courseOffering.Concentration</td>
+                    <td>
+                        <input type="checkbox"
+                               name="CampusCourse"
+                               disabled
+                               value="@courseOffering.CampusCourse"
+                               @(Html.Raw(courseOffering.CampusCourse ? "checked=\"checked\"" : "")) />
+                    </td>
+                </tr>
+            }
+        }
+    </tbody>
+</table>
+

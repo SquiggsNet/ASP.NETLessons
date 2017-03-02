@@ -21,6 +21,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.EndDate)
             </th>
+            <th>
+                Academic Year
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -35,6 +38,9 @@
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.EndDate)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.AcademicYear.Title)
             </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
