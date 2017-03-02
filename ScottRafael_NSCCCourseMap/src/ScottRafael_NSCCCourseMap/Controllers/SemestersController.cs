@@ -53,7 +53,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
 
         private void PopulateCourseOfferingData(Semester semester)
         {
-            var semesterCourseOfferings = semester.CourseOfferings;
+            var semesterCourseOfferings = semester.CourseOfferings.OrderBy(c=>c.Course.CourseFull).OrderBy(c=>c.Concentration.Title);
             var viewModel = new List<SemesterCourseDetailsData>();
             foreach (var courseOffering in semesterCourseOfferings)
             {

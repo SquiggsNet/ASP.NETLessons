@@ -1,0 +1,83 @@
+@model ScottRafael_NSCCCourseMap.Models.NSCCCourseMapViewModels.CourseOfferingIndexData
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Course Offerings</h2>
+
+<p>
+    <a asp-action="Create">Create New Course Offering</a>
+</p>
+<hr />
+
+<form asp-action="index" method="post">
+    <div class="form-horizontal">
+        <h4>Select from the dropdown lists to view/filter the Course Offering list</h4>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Semester</label>
+            <div class="col-md-10">
+                <select onchange="this.form.submit();" asp-for="SelectedSemesterID" class="form-control" asp-items="@Model.SemesterList">
+                    <option value="">-- Select Semester --</option>
+                </select>
+                <span asp-validation-for="SelectedSemesterID" class="text-danger"></span>
+            </div>
+        </div>
+
+        <div class="form-group">
+            <label class="col-md-2 control-label">Concentration</label>
+            <div class="col-md-10">
+                <select onchange="this.form.submit();" asp-for="SelectedConcentrationID" class="form-control" asp-items="@Model.ConcentrationList">
+                    <option value="">-- Select Concentration --</option>
+                </select>
+                <span asp-validation-for="SelectedConcentrationID" class="text-danger"></span>
+            </div>
+        </div>
+
+    </div>
+</form>
+<hr />
+<table class="table">
+    <thead>
+        <tr>
+            <th>Course Code</th>
+            <th>Course Title</th>
+            <th>Concentration</th>
+            <th>Semester</th>
+            <th>Campus Course</th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@if(Model.CourseOfferings != null) {
+    @foreach (var item in Model.CourseOfferings) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.Course.CourseCode)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Course.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Concentration.Title)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Semester.Name)
+            </td>
+            <td>
+                <input type="checkbox"
+                       name="CampusCourse"
+                       disabled
+                       value="modelItem => item.IsCampusCourse"
+                       @(Html.Raw(item.IsCampusCourse ? "checked=\"checked\"" : "")) />
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+    }
+}
+    </tbody>
+</table>

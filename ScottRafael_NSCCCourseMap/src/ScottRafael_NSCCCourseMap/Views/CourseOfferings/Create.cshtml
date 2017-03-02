@@ -1,0 +1,62 @@
+@model ScottRafael_NSCCCourseMap.Models.CourseOffering
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h2>Create Course Offering</h2>
+
+<form asp-action="Create">
+    <div class="form-horizontal">
+        <hr />
+        <div class="form-group">
+            <label asp-for="CourseId" class="col-md-2 control-label">Course</label>
+            <div class="col-md-10">
+                <select asp-for="CourseId" class="form-control" asp-items="ViewBag.CourseId">
+                    <option value="">-- Select --</option>
+                </select>
+                <span asp-validation-for="CourseId" class="text-danger"></span>
+            </div>
+        </div>
+        <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="ConcentrationId" class="col-md-2 control-label">Concentration</label>
+            <div class="col-md-10">
+                <select asp-for="ConcentrationId" class ="form-control" asp-items="ViewBag.ConcentrationId">
+                    <option value="">-- Select --</option>
+                </select>
+                <span asp-validation-for="ConcentrationId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <label asp-for="SemesterId" class="col-md-2 control-label">Semester</label>
+            <div class="col-md-10">
+                <select asp-for="SemesterId" class="form-control" asp-items="ViewBag.SemesterId">
+                    <option value="">-- Select --</option>
+                </select>
+                <span asp-validation-for="SemesterId" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <div class="checkbox">
+                    <input asp-for="IsCampusCourse" />
+                    <label asp-for="IsCampusCourse"></label>
+                </div>
+            </div>
+        </div>
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Create" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+</form>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

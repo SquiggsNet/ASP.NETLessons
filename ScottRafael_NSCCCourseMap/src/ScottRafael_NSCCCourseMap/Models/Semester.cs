@@ -15,12 +15,12 @@ namespace ScottRafael_NSCCCourseMap.Models
         public string Name { get; set; }
         [Required]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:D}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:D}", ApplyFormatInEditMode = false)]
         [Display(Name = "Start Date")]
         public DateTime StartDate { get; set; }
         [Required]
         [DataType(DataType.Date)]
-        [DisplayFormat(DataFormatString = "{0:D}", ApplyFormatInEditMode = true)]
+        [DisplayFormat(DataFormatString = "{0:D}", ApplyFormatInEditMode = false)]
         [Display(Name = "End Date")]
         public DateTime EndDate { get; set; }
         [Required]

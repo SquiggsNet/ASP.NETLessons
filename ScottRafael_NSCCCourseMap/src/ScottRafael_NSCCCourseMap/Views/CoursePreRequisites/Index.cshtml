@@ -1,0 +1,59 @@
+@model ScottRafael_NSCCCourseMap.Models.NSCCCourseMapViewModels.CoursePrerequisiteData
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h2>Course Prerequisites</h2>
+
+<p>
+    <a asp-action="Create">Create New Course Prerequisite</a>
+</p>
+<hr />
+<form asp-action="index" method="post">
+    <div class="form-horizontal">
+        <h4>Select from the dropdown lists to view/filter the Course Prerequisites</h4>
+        <div class="form-group">
+            <label class="col-md-2 control-label">Courses</label>
+            @*<div class="col-md-10">
+                <select onchange="this.form.submit();" asp-for="SelectedSemesterID" class="form-control" asp-items="@Model.SemesterList">
+                    <option value="">-- Select Semester --</option>
+                </select>
+                <span asp-validation-for="SelectedSemesterID" class="text-danger"></span>
+            </div>*@
+        </div>
+    </div>
+</form>
+
+
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        Course
+                    </th>
+                    <th>
+                        Prerequisite
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+
+                @foreach (var item in ViewData.)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Course.CourseFull)
+                        </td>
+                        <td>
+                          @*  @Html.DisplayFor(modelItem => item.PreRequisite.CourseFull)*@
+                        </td>
+                        <td>
+                            <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                            <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
