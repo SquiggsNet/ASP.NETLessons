@@ -172,5 +172,16 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         {
             return _context.Concentrations.Any(e => e.Id == id);
         }
+
+        [AcceptVerbs("Get", "Post")]
+        public IActionResult VerifyTitle(string title)
+        {
+            if (_context.Concentrations.Any(c => c.Title == title))
+            {
+                return Json(data: $"The title {title} is already in use.");
+            }
+
+            return Json(data: true);
+        }
     }
 }
