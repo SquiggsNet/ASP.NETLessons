@@ -22,7 +22,10 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         // GET: Programs
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Programs.ToListAsync());
+            var Programs = from p in _context.Programs
+                                select p;
+            Programs = Programs.OrderBy(p => p.Title);
+            return View(await Programs.ToListAsync());
         }
 
         // GET: Programs/Details/5
@@ -34,13 +37,15 @@ namespace ScottRafael_NSCCCourseMap.Controllers
             }
 
             var program = await _context.Programs
-                .Include(p => p.Concentrations)          
+                .Include(p => p.Concentrations)        
                 .AsNoTracking()
                 .SingleOrDefaultAsync(m => m.Id == id);
+            
             if (program == null)
             {
                 return NotFound();
             }
+            program.Concentrations = program.Concentrations.OrderBy(c => c.Title).ToList();
 
             return View(program);
         }
@@ -56,7 +61,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Title")] Program program)
+        public async Task<IActionResult> Create([Bind("Id,Title")] ScottRafael_NSCCCourseMap.Models.Program program)
         {
             if (ModelState.IsValid)
             {
@@ -149,6 +154,17 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         private bool ProgramExists(int id)
         {
             return _context.Programs.Any(e => e.Id == id);
+        }
+
+        [AcceptVerbs("Get", "Post")]
+        public IActionResult VerifyTitle(string title)
+        {
+            if (_context.Programs.Any(p => p.Title == title))
+            {
+                return Json(data: $"The title {title} is already in use.");
+            }
+
+            return Json(data: true);
         }
     }
 }
