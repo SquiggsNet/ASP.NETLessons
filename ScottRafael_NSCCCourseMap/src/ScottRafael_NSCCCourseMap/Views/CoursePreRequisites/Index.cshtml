@@ -15,12 +15,12 @@
         <h4>Select from the dropdown lists to view/filter the Course Prerequisites</h4>
         <div class="form-group">
             <label class="col-md-2 control-label">Courses</label>
-            @*<div class="col-md-10">
-                <select onchange="this.form.submit();" asp-for="SelectedSemesterID" class="form-control" asp-items="@Model.SemesterList">
-                    <option value="">-- Select Semester --</option>
+            <div class="col-md-10">
+                <select onchange="this.form.submit();" asp-for="SelectedCourseID" class="form-control" asp-items="@Model.CourseList">
+                    <option value="">-- Select Course --</option>
                 </select>
-                <span asp-validation-for="SelectedSemesterID" class="text-danger"></span>
-            </div>*@
+                <span asp-validation-for="SelectedCourseID" class="text-danger"></span>
+            </div>
         </div>
     </div>
 </form>
@@ -40,14 +40,14 @@
             </thead>
             <tbody>
 
-                @foreach (var item in ViewData.)
+                @foreach (var item in Model.CoursePreRequisites)
                 {
                     <tr>
                         <td>
                             @Html.DisplayFor(modelItem => item.Course.CourseFull)
                         </td>
                         <td>
-                          @*  @Html.DisplayFor(modelItem => item.PreRequisite.CourseFull)*@
+                            @Html.DisplayFor(modelItem => item.PreRequisite.CourseFull)
                         </td>
                         <td>
                             <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |

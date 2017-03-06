@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using ScottRafael_NSCCCourseMap.Models;
+using Microsoft.EntityFrameworkCore.Metadata;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -31,6 +32,18 @@ namespace ScottRafael_NSCCCourseMap.Data
             modelBuilder.Entity<Course>().ToTable("Course");
             modelBuilder.Entity<CourseOffering>().ToTable("CourseOffering");
             modelBuilder.Entity<CoursePreRequisite>().ToTable("CoursePreRequisite");
+
+            modelBuilder.Entity<CoursePreRequisite>()
+                .HasOne(c => c.Course)
+                .WithMany(c => c.PreRequisites)
+                .HasForeignKey(c => c.CourseId)
+                .OnDelete(DeleteBehavior.Restrict);
+
+            modelBuilder.Entity<CoursePreRequisite>()
+                .HasOne(c => c.PreRequisite)
+                .WithMany(c => c.IsPreRequisitesFor)
+                .HasForeignKey(c => c.PreRequisiteId)
+                .OnDelete(DeleteBehavior.Restrict);
         }
     }
 }

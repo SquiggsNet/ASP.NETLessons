@@ -4,26 +4,37 @@
     ViewData["Title"] = "Create";
 }
 
-<h2>Create</h2>
+<h2>Create Course Prerequisite</h2>
 
 <form asp-action="Create">
     <div class="form-horizontal">
-        <h4>CoursePreRequisite</h4>
         <hr />
         <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
         <div class="form-group">
-            <label asp-for="CourseId" class="col-md-2 control-label"></label>
+            <label asp-for="CourseId" class="col-md-2 control-label">Course</label>
             <div class="col-md-10">
-                <select asp-for="CourseId" class ="form-control" asp-items="ViewBag.CourseId"></select>
+                <select asp-for="CourseId" class="form-control" asp-items="ViewBag.CourseId">
+                    <option value="">-- Select Course --</option>
+                </select>
+                <span asp-validation-for="CourseId" class="text-danger"></span>
             </div>
         </div>
+
         <div class="form-group">
-            <label asp-for="PreRequisiteId" class="col-md-2 control-label"></label>
+            <label asp-for="PreRequisiteId" class="col-md-2 control-label">Prerequisite</label>
             <div class="col-md-10">
-                <input asp-for="PreRequisiteId" class="form-control" />
-                <span asp-validation-for="PreRequisiteId" class="text-danger" />
+                <select asp-for="PreRequisiteId" class="form-control" asp-items="ViewBag.CourseId">
+                    <option value="">-- Select Prerequisite --</option>
+                </select>
+                <span asp-validation-for="PreRequisiteId" class="text-danger"></span>
             </div>
         </div>
+
+
+        
+
+
         <div class="form-group">
             <div class="col-md-offset-2 col-md-10">
                 <input type="submit" value="Create" class="btn btn-default" />

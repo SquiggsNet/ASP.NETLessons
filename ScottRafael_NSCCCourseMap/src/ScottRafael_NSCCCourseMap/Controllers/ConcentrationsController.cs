@@ -136,7 +136,6 @@ namespace ScottRafael_NSCCCourseMap.Controllers
                                    orderby p.Title
                                    select p;
             ViewBag.ProgramId = new SelectList(programsQuery.AsNoTracking(), "Id", "Title", selectedProgram);
-            //ViewData["ProgramId"] = new SelectList(_context.Programs, "Id", "Id");
         }
 
         // GET: Concentrations/Delete/5

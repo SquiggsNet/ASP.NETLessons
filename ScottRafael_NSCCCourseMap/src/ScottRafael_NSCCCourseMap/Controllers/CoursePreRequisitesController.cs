@@ -25,74 +25,33 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         // GET: CoursePreRequisites
         public async Task<IActionResult> Index(int ? selectedCourseID)
         {
-            //var viewModel = new CoursePrerequisiteData();
+            var viewModel = new CoursePrerequisiteData();
 
-            //var courses = await _context.CoursePreRequisites
-            //                .Include(c => c.Course)
-            //                .AsNoTracking()
-            //                .OrderBy(c => c.Course.Title)
-            //                .ToListAsync();
-
-            //if(selectedCourseID != null)
-            //{
-            //    var selectCourseID = (int)selectedCourseID;
-            //    courses = await _context.CoursePreRequisites
-            //                .Include(c => c.Course)
-            //                .AsNoTracking()
-            //                .OrderBy(c => c.Course.Title)
-            //                .Where(c => c.Course.Id.Equals(selectCourseID))
-            //                .ToListAsync();                  
-            //}
-
-            //ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "CourseFull");
-            //PopulatePrerequisiteCourseData;
-
-            var allPrerequisites = _context.CoursePreRequisites
-                                .Include(c => c.Course)
-                                .AsNoTracking();
-            var allCourses = _context.Courses;
-
-
-            var viewModel = new List<CoursePrerequisiteData>();
-            foreach (var currentPre in allPrerequisites)
+            if (selectedCourseID != null)
             {
-                var id = currentPre.PreRequisiteId;
-                var Prereq = allCourses.AsNoTracking().Single(m => m.Id == id);
-
-                viewModel.Add(new CoursePrerequisiteData
-                {
-                    Id = currentPre.Id,
-                    Course = currentPre.Course,
-                    PrerequisiteCourse = Prereq
-                });
+                viewModel.SelectedCourseID = (int)selectedCourseID;
+                viewModel.CoursePreRequisites = await _context.CoursePreRequisites
+                                           .Include(c => c.Course)
+                                           .Include(c => c.PreRequisite)
+                                           .Where(c => c.Course.Id.Equals(selectedCourseID))
+                                           .AsNoTracking()
+                                           .OrderBy(c => c.Course.CourseCode)
+                                           .ToListAsync();
             }
-            ViewData["PopCourses"] = viewModel;
+            else
+            {
+                viewModel.CoursePreRequisites = await _context.CoursePreRequisites
+                                            .Include(c => c.Course)
+                                            .Include(c => c.PreRequisite)
+                                            .AsNoTracking()
+                                            .OrderBy(c => c.Course.CourseCode)
+                                            .ToListAsync();
+            }
+
+            SelectList courseList = new SelectList(_context.Courses.OrderBy(c => c.CourseCode), "Id", "CourseFull");
+            viewModel.CourseList = courseList;
 
             return View(viewModel);
-        }
-
-        private void PopulatePrerequisiteCourseData(Course course)
-        {
-            var allPrerequisites = _context.CoursePreRequisites
-                                .Include(c => c.Course)
-                                .AsNoTracking();
-            var allCourses = _context.Courses;
-
-
-            var viewModel = new List<CoursePrerequisiteData>();
-            foreach (var currentPre in allPrerequisites)
-            {
-                var id = currentPre.PreRequisiteId;
-                var Prereq = allCourses.AsNoTracking().Single(m => m.Id == id);
-     
-                viewModel.Add(new CoursePrerequisiteData
-                {
-                   Id = currentPre.Id,
-                   Course = currentPre.Course,
-                   PrerequisiteCourse = Prereq                   
-                });
-            }
-            ViewData["Courses"] = viewModel;
         }
 
         // GET: CoursePreRequisites/Details/5
@@ -115,7 +74,8 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         // GET: CoursePreRequisites/Create
         public IActionResult Create()
         {
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id");
+            ViewBag.CourseId = new SelectList(_context.Courses.OrderBy(c => c.CourseCode), "Id", "CourseFull");
+
             return View();
         }
 
@@ -149,7 +109,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
             {
                 return NotFound();
             }
-            ViewData["CourseId"] = new SelectList(_context.Courses, "Id", "Id", coursePreRequisite.CourseId);
+            ViewBag.CourseId = new SelectList(_context.Courses.OrderBy(c => c.CourseCode), "Id", "CourseFull");
             return View(coursePreRequisite);
         }
 

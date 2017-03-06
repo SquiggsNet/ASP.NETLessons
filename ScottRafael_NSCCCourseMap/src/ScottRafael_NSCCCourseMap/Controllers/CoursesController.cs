@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ScottRafael_NSCCCourseMap.Data;
 using ScottRafael_NSCCCourseMap.Models;
 using Microsoft.AspNetCore.Authorization;
+using ScottRafael_NSCCCourseMap.Models.NSCCCourseMapViewModels;
 
 namespace ScottRafael_NSCCCourseMap.Controllers
 {
@@ -66,6 +67,24 @@ namespace ScottRafael_NSCCCourseMap.Controllers
             {
                 return NotFound();
             }
+
+            var viewModel = new CourseInformation();
+            viewModel.Id = (int)id;
+            viewModel.Course = course;
+            viewModel.CoursePreRequisites = await _context.CoursePreRequisites
+                                           .Include(c => c.Course)
+                                           .Include(c => c.PreRequisite)
+                                           .Where(c => c.PreRequisiteId.Equals(id))
+                                           .AsNoTracking()
+                                           .OrderBy(c => c.Course.CourseCode)
+                                           .ToListAsync();
+            viewModel.PreRequisiteFor = await _context.CoursePreRequisites
+                                           .Include(c => c.Course)
+                                           .Include(c => c.PreRequisite)
+                                           .Where(c => c.CourseId.Equals(id))
+                                           .AsNoTracking()
+                                           .OrderBy(c => c.Course.CourseCode)
+                                           .ToListAsync();
 
             return View(course);
         }
@@ -175,5 +194,28 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         {
             return _context.Courses.Any(e => e.Id == id);
         }
+
+        //[AcceptVerbs("Get", "Post")]
+        //public IActionResult VerifyTitle(string title)
+        //{
+        //    if (_context.Courses.Any(c => c.Title == title))
+        //    {
+        //        return Json(data: $"The title {title} is already in use.");
+        //    }
+
+        //    return Json(data: true);
+        //}
+
+        [AcceptVerbs("Get", "Post")]
+        public IActionResult VerifyCourseCode(string code)
+        {
+            if (_context.Courses.Any(c => c.CourseCode == code))
+            {
+                return Json(data: $"The course code {code} is already in use.");
+            }
+
+            return Json(data: true);
+        }
+
     }
 }

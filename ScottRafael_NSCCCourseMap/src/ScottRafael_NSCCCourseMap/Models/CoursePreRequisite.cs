@@ -10,10 +10,12 @@ namespace ScottRafael_NSCCCourseMap.Models
     public class CoursePreRequisite
     {
         public int Id { get; set; }
+        [Required]
         public int CourseId { get; set; }
-        
+        [Required]
         public int PreRequisiteId { get; set; }
 
         public Course Course { get; set; }
+        public Course PreRequisite { get; set; }
     }
 }
