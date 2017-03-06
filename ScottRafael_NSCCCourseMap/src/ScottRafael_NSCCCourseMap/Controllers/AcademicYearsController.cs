@@ -7,11 +7,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using ScottRafael_NSCCCourseMap.Data;
 using ScottRafael_NSCCCourseMap.Models;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ScottRafael_NSCCCourseMap.Controllers
 {
+    [Authorize]
     public class AcademicYearsController : Controller
     {
+        
         private readonly NSCCCourseMapContext _context;
 
         public AcademicYearsController(NSCCCourseMapContext context)

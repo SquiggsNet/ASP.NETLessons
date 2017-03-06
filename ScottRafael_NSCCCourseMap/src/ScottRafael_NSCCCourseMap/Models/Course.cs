@@ -23,8 +23,6 @@ namespace ScottRafael_NSCCCourseMap.Models
         public ICollection<CourseOffering> CourseOfferings { get; set; }
 
         public ICollection<CoursePreRequisite> CoursePreRequisites { get; set; }
-        [ForeignKey("PreRequisiteId")]
-        public ICollection<CoursePreRequisite> CoursePreRequisitesFor { get; set; }
 
     }
 }

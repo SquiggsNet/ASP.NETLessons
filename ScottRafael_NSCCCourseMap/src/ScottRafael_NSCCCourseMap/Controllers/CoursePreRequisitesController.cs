@@ -8,9 +8,11 @@ using Microsoft.EntityFrameworkCore;
 using ScottRafael_NSCCCourseMap.Data;
 using ScottRafael_NSCCCourseMap.Models;
 using ScottRafael_NSCCCourseMap.Models.NSCCCourseMapViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace ScottRafael_NSCCCourseMap.Controllers
 {
+    [Authorize]
     public class CoursePreRequisitesController : Controller
     {
         private readonly NSCCCourseMapContext _context;
