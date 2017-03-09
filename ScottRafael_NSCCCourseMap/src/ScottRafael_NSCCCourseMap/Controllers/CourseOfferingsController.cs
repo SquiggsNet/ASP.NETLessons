@@ -67,10 +67,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
             {
                 viewModel.SelectedSemesterID = (int)SelectedSemesterID;
                 viewModel.SelectedConcentrationID = (int)SelectedConcentrationID;
-                viewModel.CourseOfferings = await _context.CourseOfferings
-                            .Include(c => c.Course)
-                            .Include(c => c.Concentration)
-                            .Include(c => c.Semester)
+                viewModel.CourseOfferings = await NewMethod()
                             .Where(c => c.Semester.Id.Equals(SelectedSemesterID))
                             .Where(c => c.Concentration.Id.Equals(SelectedConcentrationID))
                             .AsNoTracking()
@@ -115,6 +112,14 @@ namespace ScottRafael_NSCCCourseMap.Controllers
             viewModel.ConcentrationList = concentrationList;
 
             return View(viewModel);
+        }
+
+        private Microsoft.EntityFrameworkCore.Query.IIncludableQueryable<CourseOffering, Semester> NewMethod()
+        {
+            return _context.CourseOfferings
+                                        .Include(c => c.Course)
+                                        .Include(c => c.Concentration)
+                                        .Include(c => c.Semester);
         }
 
         // GET: CourseOfferings/Details/5
