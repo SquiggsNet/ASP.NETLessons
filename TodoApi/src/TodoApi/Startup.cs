@@ -11,6 +11,7 @@ using TodoApi.Models;
 using Swashbuckle.AspNetCore.Swagger;
 using Microsoft.Extensions.PlatformAbstractions;
 using System.IO;
+//using Microsoft.AspNetCore.StaticFiles;
 
 namespace TodoApi
 {
