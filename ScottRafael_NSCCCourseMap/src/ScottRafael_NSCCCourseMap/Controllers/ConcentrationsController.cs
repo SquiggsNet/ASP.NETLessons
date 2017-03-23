@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ScottRafael_NSCCCourseMap.Data;
 using ScottRafael_NSCCCourseMap.Models;
 using Microsoft.AspNetCore.Authorization;
+using ScottRafael_NSCCCourseMap.Models.DTOs;
 
 namespace ScottRafael_NSCCCourseMap.Controllers
 {
@@ -183,6 +184,62 @@ namespace ScottRafael_NSCCCourseMap.Controllers
             }
 
             return Json(data: true);
+        }
+
+        //API Methods
+
+        //api/concentrations
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/Concentrations")]
+        public async Task<IActionResult> GetConcentrations()
+        {
+            //return a list of concentrations
+            List<ConcentrationDTO> dtoList = new List<ConcentrationDTO>();
+
+            var Concentrations = await _context.Concentrations
+                        .Include(c => c.Program)
+                        .OrderBy(c => c.Title)
+                        .AsNoTracking()
+                        .ToListAsync();
+
+            foreach (var concetration in Concentrations)
+            {
+                var dto = new ConcentrationDTO
+                {
+                    Id = concetration.Id,
+                    Title = concetration.Title,
+                    CollegeProgram = concetration.Program.Title,
+                };
+                dtoList.Add(dto);
+            }
+                        
+            return new ObjectResult(dtoList);
+        }
+
+        //api/concentrations
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/Concentrations/{id}")]
+        public async Task<IActionResult> GetConcentration(int? id)
+        {
+            var Concentration = await _context.Concentrations
+                        .Include(c => c.Program)
+                        .AsNoTracking()
+                        .SingleOrDefaultAsync(m => m.Id == id);
+
+            ConcentrationDTO dtoConcentration = new ConcentrationDTO {
+                    Id = Concentration.Id,
+                    Title = Concentration.Title,
+                    CollegeProgram = Concentration.Program.Title,
+            };
+
+            if (Concentration == null)
+            {
+                return NotFound();
+            }
+
+            return new ObjectResult(dtoConcentration);
         }
     }
 }

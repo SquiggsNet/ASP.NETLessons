@@ -8,13 +8,13 @@ using Microsoft.EntityFrameworkCore;
 using ScottRafael_NSCCCourseMap.Data;
 using ScottRafael_NSCCCourseMap.Models;
 using Microsoft.AspNetCore.Authorization;
+using ScottRafael_NSCCCourseMap.Models.DTOs;
 
 namespace ScottRafael_NSCCCourseMap.Controllers
 {
     [Authorize]
     public class AcademicYearsController : Controller
     {
-        
         private readonly NSCCCourseMapContext _context;
 
         public AcademicYearsController(NSCCCourseMapContext context)
@@ -167,6 +167,91 @@ namespace ScottRafael_NSCCCourseMap.Controllers
             }
 
             return Json(data: true);
+        }
+
+        //API Methods
+
+        //api/concentrations
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/AcademicYears")]
+        public async Task<IActionResult> GetAcademicYears()
+        {
+            //return a list of concentrations
+            List<AcademicYearDTO> dtoList = new List<AcademicYearDTO>();
+
+            var AcademicYears = await _context.AcademicYears
+                        .Include(a => a.Semesters)
+                        .OrderBy(a => a.Title) 
+                        .AsNoTracking()
+                        .ToListAsync();
+
+            foreach (var AcademicYear in AcademicYears)
+            {
+
+                var dto = new AcademicYearDTO
+                {
+                    Id = AcademicYear.Id,
+                    Title = AcademicYear.Title,
+                };
+
+                List<SemesterDTO> semesterDtoList = new List<SemesterDTO>();
+                foreach (var Semester in AcademicYear.Semesters.OrderBy(s =>s.StartDate))
+                {
+                    var dtoSemester = new SemesterDTO
+                    {
+                        Id = Semester.Id,
+                        Name = Semester.Name,
+                        StartDate = Semester.StartDate,
+                        EndDate = Semester.EndDate
+                    };
+                    semesterDtoList.Add(dtoSemester);
+                };
+
+                dto.Semesters = semesterDtoList;
+                dtoList.Add(dto);
+            }
+            return new ObjectResult(dtoList);
+        }
+
+        //api/concentrations
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/AcademicYears/{id}")]
+        public async Task<IActionResult> GetAcademicYear(int? id)
+        {
+            var AcademicYear = await _context.AcademicYears
+                        .Include(a => a.Semesters)
+                        .AsNoTracking()
+                        .SingleOrDefaultAsync(m => m.Id == id);
+
+            var dtoAcademicYear = new AcademicYearDTO
+            {
+                Id = AcademicYear.Id,
+                Title = AcademicYear.Title,
+            };
+
+            List<SemesterDTO> semesterDtoList = new List<SemesterDTO>();
+            foreach (var Semester in AcademicYear.Semesters.OrderBy(s => s.StartDate))
+            {
+                var dtoSemester = new SemesterDTO
+                {
+                    Id = Semester.Id,
+                    Name = Semester.Name,
+                    StartDate = Semester.StartDate,
+                    EndDate = Semester.EndDate
+                };
+                semesterDtoList.Add(dtoSemester);
+            };
+
+            dtoAcademicYear.Semesters = semesterDtoList;
+
+            if (AcademicYear == null)
+            {
+                return NotFound();
+            }
+
+            return new ObjectResult(dtoAcademicYear);
         }
     }
 }
