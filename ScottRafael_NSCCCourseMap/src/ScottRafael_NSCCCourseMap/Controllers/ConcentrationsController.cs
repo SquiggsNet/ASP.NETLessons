@@ -188,7 +188,12 @@ namespace ScottRafael_NSCCCourseMap.Controllers
 
         //API Methods
 
-        //api/concentrations
+        //api/Concentrations
+
+        /// <summary>
+        /// Returns a collection of Concentrations.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         [Route("api/Concentrations")]
@@ -217,7 +222,13 @@ namespace ScottRafael_NSCCCourseMap.Controllers
             return new ObjectResult(dtoList);
         }
 
-        //api/concentrations
+        //api/Concentrations/id
+
+        /// <summary>
+        /// Returns a specific Concentration. 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         [Route("api/Concentrations/{id}")]

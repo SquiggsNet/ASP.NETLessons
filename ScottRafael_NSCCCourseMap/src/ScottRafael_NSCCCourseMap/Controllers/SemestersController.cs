@@ -9,6 +9,7 @@ using ScottRafael_NSCCCourseMap.Data;
 using ScottRafael_NSCCCourseMap.Models;
 using ScottRafael_NSCCCourseMap.Models.NSCCCourseMapViewModels;
 using Microsoft.AspNetCore.Authorization;
+using ScottRafael_NSCCCourseMap.Models.DTOs;
 
 namespace ScottRafael_NSCCCourseMap.Controllers
 {
@@ -19,7 +20,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
 
         public SemestersController(NSCCCourseMapContext context)
         {
-            _context = context;    
+            _context = context;
         }
 
         // GET: Semesters
@@ -55,7 +56,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
 
         private void PopulateCourseOfferingData(Semester semester)
         {
-            var semesterCourseOfferings = semester.CourseOfferings.OrderBy(c=>c.Course.CourseFull).OrderBy(c=>c.Concentration.Title);
+            var semesterCourseOfferings = semester.CourseOfferings.OrderBy(c => c.Course.CourseFull).OrderBy(c => c.Concentration.Title);
             var viewModel = new List<SemesterCourseDetailsData>();
             foreach (var courseOffering in semesterCourseOfferings)
             {
@@ -151,8 +152,8 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         private void PopulateAcademicYearsDropDownList(object selectedAcademicYear = null)
         {
             var academicYearQuery = from a in _context.AcademicYears
-                                orderby a.Title
-                                select a;
+                                    orderby a.Title
+                                    select a;
             ViewBag.AcademicYearId = new SelectList(academicYearQuery.AsNoTracking(), "Id", "Title", selectedAcademicYear);
             //ViewData["ProgramId"] = new SelectList(_context.Programs, "Id", "Id");
         }
@@ -199,6 +200,96 @@ namespace ScottRafael_NSCCCourseMap.Controllers
             }
 
             return Json(data: true);
+        }
+
+        //API Methods
+
+        //api/Semesters
+
+        /// <summary>
+        /// Returns a collection of Semesters.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/Semesters")]
+        public async Task<IActionResult> GetSemesters()
+        {
+            //return a list of concentrations
+            List<SemesterDTO> dtoList = new List<SemesterDTO>();
+
+            var Semesters = await _context.Semesters
+                            .OrderByDescending(s => s.StartDate)
+                            .AsNoTracking()
+                            .ToListAsync();
+
+            foreach (var Semester in Semesters)
+            {
+                var dtoSemester = new SemesterDTO
+                {
+                    Id = Semester.Id,
+                    Name = Semester.Name,
+                    StartDate = Semester.StartDate,
+                    EndDate = Semester.EndDate
+                };
+                dtoList.Add(dtoSemester);
+            };
+            return new ObjectResult(dtoList);
+        }
+
+        //api/Semesters/id
+
+        /// <summary>
+        /// Returns a specific Semester. 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/Semesters/{id}")]
+        public async Task<IActionResult> GetSemester(int? id)
+        {
+            var Semester = await _context.Semesters
+                        .Include(s => s.CourseOfferings)
+                            .ThenInclude(c => c.Course)
+                        .Include(c => c.CourseOfferings)
+                            .ThenInclude(c => c.Concentration)
+                        .Include(s => s.AcademicYear)
+                        .AsNoTracking()
+                        .SingleOrDefaultAsync(s => s.Id == id);
+
+            var SemesterFullDTO = new SemesterFullDTO
+            {
+                Id = Semester.Id,
+                Name = Semester.Name,
+                AcademicYear = Semester.AcademicYear.Title,
+                StartDate = Semester.StartDate,
+                EndDate = Semester.EndDate
+            };
+            List<CourseOfferingsDTO> courseOfferingDtoList = new List<CourseOfferingsDTO>();
+            foreach (var courseOffering in Semester.CourseOfferings)
+            {
+                var CourseOfferingsDTO = new CourseOfferingsDTO
+                {
+                    Id = courseOffering.Id,
+                    CourseId = courseOffering.CourseId,
+                    CourseTitle = courseOffering.Course.Title,
+                    ConcentrationId = courseOffering.ConcentrationId,
+                    ConcentrationTitle = courseOffering.Concentration.Title,
+                    SemesterId = courseOffering.SemesterId,
+                    SemesterName = courseOffering.Semester.Name,
+                    IsCampusCourse = courseOffering.IsCampusCourse
+                };
+                courseOfferingDtoList.Add(CourseOfferingsDTO);
+            };
+            SemesterFullDTO.CourseOfferings = courseOfferingDtoList;
+
+            if (Semester == null)
+            {
+                return NotFound();
+            }
+
+            return new ObjectResult(SemesterFullDTO);
         }
     }
 }

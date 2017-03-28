@@ -8,6 +8,7 @@ using Microsoft.EntityFrameworkCore;
 using ScottRafael_NSCCCourseMap.Data;
 using ScottRafael_NSCCCourseMap.Models;
 using Microsoft.AspNetCore.Authorization;
+using ScottRafael_NSCCCourseMap.Models.DTOs;
 
 namespace ScottRafael_NSCCCourseMap.Controllers
 {
@@ -167,6 +168,83 @@ namespace ScottRafael_NSCCCourseMap.Controllers
             }
 
             return Json(data: true);
+        }
+
+        //API Methods
+
+        //api/Programs
+
+        /// <summary>
+        /// Returns a collection of Programs.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/Programs")]
+        public async Task<IActionResult> GetPrograms()
+        {
+            //return a list of concentrations
+            List<ProgramDTO> dtoList = new List<ProgramDTO>();
+
+            var Programs = await _context.Programs
+                        .OrderBy(p => p.Title)
+                        .AsNoTracking()
+                        .ToListAsync();
+
+            foreach (var Program in Programs)
+            {
+                var dto = new ProgramDTO
+                {
+                    Id = Program.Id,
+                    Title = Program.Title,
+                };
+                dtoList.Add(dto);
+            }
+            return new ObjectResult(dtoList);
+        }
+
+        //api/Programs/id
+
+        /// <summary>
+        /// Returns a specific Program. 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/Programs/{id}")]
+        public async Task<IActionResult> GetProgram(int? id)
+        {
+            var Program = await _context.Programs
+                        .Include(p => p.Concentrations)
+                        .AsNoTracking()
+                        .SingleOrDefaultAsync(p => p.Id == id);
+
+            var dtoProgram = new ProgramFullDTO
+            {
+                Id = Program.Id,
+                Title = Program.Title,
+            };
+
+            List<ConcentrationDTO> concentrationDtoList = new List<ConcentrationDTO>();
+            foreach (var concentration in Program.Concentrations.OrderBy(c => c.Title))
+            {
+                var dtoConcentration = new ConcentrationDTO
+                {
+                    Id = concentration.Id,
+                    Title = concentration.Title,
+                };
+                concentrationDtoList.Add(dtoConcentration);
+            };
+
+            dtoProgram.Concentrations = concentrationDtoList;
+
+            if (Program == null)
+            {
+                return NotFound();
+            }
+
+            return new ObjectResult(dtoProgram);
         }
     }
 }

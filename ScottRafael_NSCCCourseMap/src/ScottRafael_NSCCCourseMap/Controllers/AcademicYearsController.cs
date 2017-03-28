@@ -171,7 +171,12 @@ namespace ScottRafael_NSCCCourseMap.Controllers
 
         //API Methods
 
-        //api/concentrations
+        //api/AcademicYears
+
+        /// <summary>
+        /// Returns a collection of Academic Years.
+        /// </summary>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         [Route("api/AcademicYears")]
@@ -214,7 +219,13 @@ namespace ScottRafael_NSCCCourseMap.Controllers
             return new ObjectResult(dtoList);
         }
 
-        //api/concentrations
+        //api/AcademicYears/id
+
+        /// <summary>
+        /// Returns a specific Academic Year. 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
         [HttpGet]
         [AllowAnonymous]
         [Route("api/AcademicYears/{id}")]

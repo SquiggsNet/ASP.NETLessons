@@ -9,6 +9,7 @@ using ScottRafael_NSCCCourseMap.Data;
 using ScottRafael_NSCCCourseMap.Models;
 using Microsoft.AspNetCore.Authorization;
 using ScottRafael_NSCCCourseMap.Models.NSCCCourseMapViewModels;
+using ScottRafael_NSCCCourseMap.Models.DTOs;
 
 namespace ScottRafael_NSCCCourseMap.Controllers
 {
@@ -217,5 +218,108 @@ namespace ScottRafael_NSCCCourseMap.Controllers
             return Json(data: true);
         }
 
+        //api/Courses
+
+        /// <summary>
+        /// Returns a collection of Courses.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/Courses")]
+        public async Task<IActionResult> GetCourses()
+        {
+            //return a list of concentrations
+            List<CourseDTO> dtoList = new List<CourseDTO>();
+
+            var courses = await _context.Courses
+                            .OrderBy(c => c.CourseCode)
+                            .AsNoTracking()
+                            .ToListAsync();
+
+            foreach (var course in courses)
+            {
+                var dtoCourse = new CourseDTO
+                {
+                    Id = course.Id,
+                    Code = course.CourseCode,
+                    Title = course.Title
+                };
+                dtoList.Add(dtoCourse);
+            };
+            return new ObjectResult(dtoList);
+        }
+
+        //api/Courses/id
+
+        /// <summary>
+        /// Returns a specific Course. 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/Courses/{id}")]
+        public async Task<IActionResult> GetCourse(int? id)
+        {
+            var Course = await _context.Courses
+                        .AsNoTracking()
+                        .SingleOrDefaultAsync(c => c.Id == id);
+
+            var CoursePreRequisites = await _context.CoursePreRequisites
+                                           .Where(c => c.CourseId.Equals(id))
+                                           .Include(c => c.PreRequisite)
+                                           .AsNoTracking()
+                                           .OrderBy(c => c.Course.CourseCode)
+                                           .ToListAsync();
+                                            
+
+            var PreRequisiteFors = await _context.CoursePreRequisites
+                                           .Where(c => c.PreRequisiteId.Equals(id))
+                                           .Include(c => c.Course)
+                                           .AsNoTracking()
+                                           .OrderBy(c => c.PreRequisite.CourseCode)
+                                           .ToListAsync();
+
+            var CourseFullDTO = new CourseFullDTO
+            {
+                Id = Course.Id,
+                Code = Course.CourseCode,
+                Title = Course.Title
+            };
+           
+            List<CourseDTO> CoursePreRequisitesDtoList = new List<CourseDTO>();
+            foreach (var coursePreRequisite in CoursePreRequisites)
+            {
+                var CoursePreDTO = new CourseDTO
+                {
+                    Id = coursePreRequisite.PreRequisite.Id,
+                    Code = coursePreRequisite.PreRequisite.CourseCode,
+                    Title = coursePreRequisite.PreRequisite.Title,
+                };
+                CoursePreRequisitesDtoList.Add(CoursePreDTO);
+            };
+            CourseFullDTO.PreRequisites = CoursePreRequisitesDtoList;
+
+            List<CourseDTO> PreRequisiteForDtoList = new List<CourseDTO>();
+            foreach (var PreRequisiteFor in PreRequisiteFors)
+            {
+                var CourseForDTO = new CourseDTO
+                {
+                    Id = PreRequisiteFor.Course.Id,
+                    Code = PreRequisiteFor.Course.CourseCode,
+                    Title = PreRequisiteFor.Course.Title,
+                };
+                PreRequisiteForDtoList.Add(CourseForDTO);
+            };
+            CourseFullDTO.IsPreRequisitesFor = PreRequisiteForDtoList;
+
+            if (Course == null)
+            {
+                return NotFound();
+            }
+
+            return new ObjectResult(CourseFullDTO);
+        }
     }
 }

@@ -1,4 +1,4 @@
-﻿{
+{
   "userSecretsId": "aspnet-ScottRafael_NSCCCourseMap-f1707dde-2cef-4e72-ac39-b28dba0f81e3",
 
   "dependencies": {
@@ -43,7 +43,8 @@
     "Microsoft.VisualStudio.Web.CodeGenerators.Mvc": {
       "version": "1.0.0-preview2-final",
       "type": "build"
-    }
+    },
+    "Swashbuckle.AspNetCore": "1.0.0-rc3"
   },
 
   "tools": {
@@ -71,7 +72,8 @@
 
   "buildOptions": {
     "emitEntryPoint": true,
-    "preserveCompilationContext": true
+    "preserveCompilationContext": true,
+    "xmlDoc": true
   },
 
   "runtimeOptions": {

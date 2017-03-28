@@ -9,6 +9,7 @@ using ScottRafael_NSCCCourseMap.Data;
 using ScottRafael_NSCCCourseMap.Models;
 using ScottRafael_NSCCCourseMap.Models.NSCCCourseMapViewModels;
 using Microsoft.AspNetCore.Authorization;
+using ScottRafael_NSCCCourseMap.Models.DTOs;
 
 namespace ScottRafael_NSCCCourseMap.Controllers
 {
@@ -261,6 +262,46 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         private bool CourseOfferingExists(int id)
         {
             return _context.CourseOfferings.Any(e => e.Id == id);
+        }
+
+        //api/CourseOfferings
+
+        /// <summary>
+        /// Returns a collection of Copurse Offerings.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/CourseOfferings")]
+        public async Task<IActionResult> GetCourseOfferings()
+        {
+            //return a list of concentrations
+            List<CourseOfferingsDTO> dtoList = new List<CourseOfferingsDTO>();
+
+            var CourseOffernigs = await _context.CourseOfferings
+                            .OrderBy(d => d.Id)
+                            .Include(c => c.Course)
+                            .Include(c => c.Concentration)
+                            .Include(c => c.Semester)
+                            .AsNoTracking()
+                            .ToListAsync();
+
+            foreach (var CourseOffernig in CourseOffernigs)
+            {
+                var dtoCourseOffering = new CourseOfferingsDTO
+                {
+                    Id = CourseOffernig.Id,
+                    CourseId = CourseOffernig.CourseId,
+                    CourseTitle = CourseOffernig.Course.Title,
+                    ConcentrationId = CourseOffernig.ConcentrationId,
+                    ConcentrationTitle = CourseOffernig.Concentration.Title,
+                    SemesterId = CourseOffernig.SemesterId,
+                    SemesterName = CourseOffernig.Semester.Name,
+                    IsCampusCourse = CourseOffernig.IsCampusCourse
+                };
+                dtoList.Add(dtoCourseOffering);
+            };
+            return new ObjectResult(dtoList);
         }
     }
 }
