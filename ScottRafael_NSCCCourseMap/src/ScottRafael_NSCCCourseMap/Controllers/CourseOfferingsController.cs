@@ -275,29 +275,194 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         [Route("api/CourseOfferings")]
         public async Task<IActionResult> GetCourseOfferings()
         {
-            //return a list of concentrations
+            //return a list of course offerings
             List<CourseOfferingsDTO> dtoList = new List<CourseOfferingsDTO>();
 
             var CourseOffernigs = await _context.CourseOfferings
-                            .OrderBy(d => d.Id)
+                            .OrderBy(c => c.Id)
                             .Include(c => c.Course)
                             .Include(c => c.Concentration)
                             .Include(c => c.Semester)
                             .AsNoTracking()
                             .ToListAsync();
 
-            foreach (var CourseOffernig in CourseOffernigs)
+            foreach (var CourseOffering in CourseOffernigs)
             {
                 var dtoCourseOffering = new CourseOfferingsDTO
                 {
-                    Id = CourseOffernig.Id,
-                    CourseId = CourseOffernig.CourseId,
-                    CourseTitle = CourseOffernig.Course.Title,
-                    ConcentrationId = CourseOffernig.ConcentrationId,
-                    ConcentrationTitle = CourseOffernig.Concentration.Title,
-                    SemesterId = CourseOffernig.SemesterId,
-                    SemesterName = CourseOffernig.Semester.Name,
-                    IsCampusCourse = CourseOffernig.IsCampusCourse
+                    Id = CourseOffering.Id,
+                    CourseId = CourseOffering.CourseId,
+                    CourseTitle = CourseOffering.Course.Title,
+                    ConcentrationId = CourseOffering.ConcentrationId,
+                    ConcentrationTitle = CourseOffering.Concentration.Title,
+                    SemesterId = CourseOffering.SemesterId,
+                    SemesterName = CourseOffering.Semester.Name,
+                    IsCampusCourse = CourseOffering.IsCampusCourse
+                };
+                dtoList.Add(dtoCourseOffering);
+            };
+            return new ObjectResult(dtoList);
+        }
+
+        //api/CourseOfferings/id
+
+        /// <summary>
+        /// Returns a specific Course Offering. 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/CoursesOfferings/{id}")]
+        public async Task<IActionResult> GetCourseOffering(int? id)
+        {
+            var CourseOffering = await _context.CourseOfferings
+                                    .Include(c => c.Course)
+                                    .Include(c => c.Concentration)
+                                    .Include(c => c.Semester)
+                                    .AsNoTracking()
+                                    .SingleOrDefaultAsync(c => c.Id == id);
+
+            CourseOfferingsDTO dtoCourseOffering = new CourseOfferingsDTO
+            {
+                Id = CourseOffering.Id,
+                CourseId = CourseOffering.CourseId,
+                CourseTitle = CourseOffering.Course.Title,
+                ConcentrationId = CourseOffering.ConcentrationId,
+                ConcentrationTitle = CourseOffering.Concentration.Title,
+                SemesterId = CourseOffering.SemesterId,
+                SemesterName = CourseOffering.Semester.Name,
+                IsCampusCourse = CourseOffering.IsCampusCourse
+            };
+
+            if (CourseOffering == null)
+            {
+                return NotFound();
+            }
+
+            return new ObjectResult(dtoCourseOffering);
+        }
+
+        //api/CourseOfferings/Course/id
+
+        /// <summary>
+        /// Returns Course Offerings for a specific Course. 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/CoursesOfferings/Course/{id}")]
+        public async Task<IActionResult> GetCourseOfferingForCourse(int? id)
+        {
+            //return a list of course offerings
+            List<CourseOfferingsDTO> dtoList = new List<CourseOfferingsDTO>();
+
+            var CourseOffernigs = await _context.CourseOfferings
+                            .OrderBy(c => c.Id)
+                            .Include(c => c.Course)
+                            .Include(c => c.Concentration)
+                            .Include(c => c.Semester)
+                            .Where(c => c.CourseId.Equals(id))
+                            .AsNoTracking()
+                            .ToListAsync();
+
+            foreach (var CourseOffering in CourseOffernigs)
+            {
+                var dtoCourseOffering = new CourseOfferingsDTO
+                {
+                    Id = CourseOffering.Id,
+                    CourseId = CourseOffering.CourseId,
+                    CourseTitle = CourseOffering.Course.Title,
+                    ConcentrationId = CourseOffering.ConcentrationId,
+                    ConcentrationTitle = CourseOffering.Concentration.Title,
+                    SemesterId = CourseOffering.SemesterId,
+                    SemesterName = CourseOffering.Semester.Name,
+                    IsCampusCourse = CourseOffering.IsCampusCourse
+                };
+                dtoList.Add(dtoCourseOffering);
+            };
+            return new ObjectResult(dtoList);
+        }
+
+        //api/CourseOfferings/Semester/id
+
+        /// <summary>
+        /// Returns Course Offerings for a specific Semester. 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/CoursesOfferings/Semester/{id}")]
+        public async Task<IActionResult> GetCourseOfferingForSemester(int? id)
+        {
+            //return a list of course offerings
+            List<CourseOfferingsDTO> dtoList = new List<CourseOfferingsDTO>();
+
+            var CourseOffernigs = await _context.CourseOfferings
+                            .OrderBy(c => c.Id)
+                            .Include(c => c.Course)
+                            .Include(c => c.Concentration)
+                            .Include(c => c.Semester)
+                            .Where(c => c.SemesterId.Equals(id))
+                            .AsNoTracking()
+                            .ToListAsync();
+
+            foreach (var CourseOffering in CourseOffernigs)
+            {
+                var dtoCourseOffering = new CourseOfferingsDTO
+                {
+                    Id = CourseOffering.Id,
+                    CourseId = CourseOffering.CourseId,
+                    CourseTitle = CourseOffering.Course.Title,
+                    ConcentrationId = CourseOffering.ConcentrationId,
+                    ConcentrationTitle = CourseOffering.Concentration.Title,
+                    SemesterId = CourseOffering.SemesterId,
+                    SemesterName = CourseOffering.Semester.Name,
+                    IsCampusCourse = CourseOffering.IsCampusCourse
+                };
+                dtoList.Add(dtoCourseOffering);
+            };
+            return new ObjectResult(dtoList);
+        }
+
+        //api/CourseOfferings/Concentration/id
+
+        /// <summary>
+        /// Returns Course Offerings for a specific Concentration. 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/CoursesOfferings/Concentration/{id}")]
+        public async Task<IActionResult> GetCourseOfferingForConcentration(int? id)
+        {
+            //return a list of course offerings
+            List<CourseOfferingsDTO> dtoList = new List<CourseOfferingsDTO>();
+
+            var CourseOffernigs = await _context.CourseOfferings
+                            .OrderBy(c => c.Id)
+                            .Include(c => c.Course)
+                            .Include(c => c.Concentration)
+                            .Include(c => c.Semester)
+                            .Where(c => c.ConcentrationId.Equals(id))
+                            .AsNoTracking()
+                            .ToListAsync();
+
+            foreach (var CourseOffering in CourseOffernigs)
+            {
+                var dtoCourseOffering = new CourseOfferingsDTO
+                {
+                    Id = CourseOffering.Id,
+                    CourseId = CourseOffering.CourseId,
+                    CourseTitle = CourseOffering.Course.Title,
+                    ConcentrationId = CourseOffering.ConcentrationId,
+                    ConcentrationTitle = CourseOffering.Concentration.Title,
+                    SemesterId = CourseOffering.SemesterId,
+                    SemesterName = CourseOffering.Semester.Name,
+                    IsCampusCourse = CourseOffering.IsCampusCourse
                 };
                 dtoList.Add(dtoCourseOffering);
             };
