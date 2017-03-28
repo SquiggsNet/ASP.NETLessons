@@ -267,7 +267,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         //api/CourseOfferings
 
         /// <summary>
-        /// Returns a collection of Copurse Offerings.
+        /// Returns a collection of Course Offerings.
         /// </summary>
         /// <returns></returns>
         [HttpGet]

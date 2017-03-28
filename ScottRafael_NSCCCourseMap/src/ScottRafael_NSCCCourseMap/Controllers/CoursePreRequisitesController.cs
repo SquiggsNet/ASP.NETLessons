@@ -9,6 +9,7 @@ using ScottRafael_NSCCCourseMap.Data;
 using ScottRafael_NSCCCourseMap.Models;
 using ScottRafael_NSCCCourseMap.Models.NSCCCourseMapViewModels;
 using Microsoft.AspNetCore.Authorization;
+using ScottRafael_NSCCCourseMap.Models.DTOs;
 
 namespace ScottRafael_NSCCCourseMap.Controllers
 {
@@ -180,6 +181,151 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         private bool CoursePreRequisiteExists(int id)
         {
             return _context.CoursePreRequisites.Any(e => e.Id == id);
+        }
+
+        //api/CoursePrerequisites
+
+        /// <summary>
+        /// Returns a collection of Course Prerequisites.
+        /// </summary>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/CoursePrerequisites")]
+        public async Task<IActionResult> GetCoursePrerequisites()
+        {
+            //return a list of course offerings
+            List<CoursePrerequisitesDTO> dtoList = new List<CoursePrerequisitesDTO>();
+
+            var CoursePrerequisites = await _context.CoursePreRequisites
+                            .Include(c => c.Course)
+                            .Include(c => c.PreRequisite)
+                            .AsNoTracking()
+                            .OrderBy(c => c.Course.CourseCode)
+                            .ToListAsync();
+
+            foreach (var Prerequisite in CoursePrerequisites)
+            {
+                var dtoCoursePrerequisite = new CoursePrerequisitesDTO
+                {
+                    Id = Prerequisite.Id,
+                };
+                
+                var CourseDTO = new CourseDTO
+                {
+                    Id = Prerequisite.Course.Id,
+                    Code = Prerequisite.Course.CourseCode,
+                    Title = Prerequisite.Course.Title
+                };
+                dtoCoursePrerequisite.Course = CourseDTO;
+                var PrerequisiteDTO = new CourseDTO
+                {
+                    Id = Prerequisite.PreRequisite.Id,
+                    Code = Prerequisite.PreRequisite.CourseCode,
+                    Title = Prerequisite.PreRequisite.Title
+                };
+                dtoCoursePrerequisite.Prerequisite = PrerequisiteDTO;
+                dtoList.Add(dtoCoursePrerequisite);
+            };
+            return new ObjectResult(dtoList);
+        }
+
+        //api/CoursePrerequisites/forcourse/id
+
+        /// <summary>
+        /// Returns CoursePrerequisites for a specific Course. 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/CoursePrerequisites/forcourse/{id}")]
+        public async Task<IActionResult> GetCoursePrerequisitesFor(int? id)
+        {
+            //return a list of course offerings
+            List<CoursePrerequisitesDTO> dtoList = new List<CoursePrerequisitesDTO>();
+
+            var CoursePrerequisites = await _context.CoursePreRequisites
+                            .Where(c => c.CourseId.Equals(id))
+                            .Include(c => c.Course)
+                            .Include(c => c.PreRequisite)
+                            .AsNoTracking()
+                            .OrderBy(c => c.PreRequisite.CourseCode)
+                            .ToListAsync();
+
+            foreach (var Prerequisite in CoursePrerequisites)
+            {
+                var dtoCoursePrerequisite = new CoursePrerequisitesDTO
+                {
+                    Id = Prerequisite.Id,
+                };
+
+                var CourseDTO = new CourseDTO
+                {
+                    Id = Prerequisite.Course.Id,
+                    Code = Prerequisite.Course.CourseCode,
+                    Title = Prerequisite.Course.Title
+                };
+                dtoCoursePrerequisite.Course = CourseDTO;
+                var PrerequisiteDTO = new CourseDTO
+                {
+                    Id = Prerequisite.PreRequisite.Id,
+                    Code = Prerequisite.PreRequisite.CourseCode,
+                    Title = Prerequisite.PreRequisite.Title
+                };
+                dtoCoursePrerequisite.Prerequisite = PrerequisiteDTO;
+                dtoList.Add(dtoCoursePrerequisite);
+            };
+            return new ObjectResult(dtoList);
+        }
+
+        //api/CoursePrerequisites/id/isprerequisitefor
+
+        /// <summary>
+        /// Returns courses a specific course is a Prerequisites for. 
+        /// </summary>
+        /// <param name="id"></param>
+        /// <returns></returns>
+        [HttpGet]
+        [AllowAnonymous]
+        [Route("api/CoursePrerequisites/{id}/isprerequisitefor")]
+        public async Task<IActionResult> GetCoursePrerequisitesIs(int? id)
+        {
+            //return a list of course offerings
+            List<CoursePrerequisitesDTO> dtoList = new List<CoursePrerequisitesDTO>();
+
+            var CoursePrerequisites = await _context.CoursePreRequisites
+                            .Where(c => c.PreRequisiteId.Equals(id))
+                            .Include(c => c.Course)
+                            .Include(c => c.PreRequisite)
+                            .AsNoTracking()
+                            .OrderBy(c => c.Course.CourseCode)
+                            .ToListAsync();
+
+            foreach (var Prerequisite in CoursePrerequisites)
+            {
+                var dtoCoursePrerequisite = new CoursePrerequisitesDTO
+                {
+                    Id = Prerequisite.Id,
+                };
+
+                var CourseDTO = new CourseDTO
+                {
+                    Id = Prerequisite.Course.Id,
+                    Code = Prerequisite.Course.CourseCode,
+                    Title = Prerequisite.Course.Title
+                };
+                dtoCoursePrerequisite.Course = CourseDTO;
+                var PrerequisiteDTO = new CourseDTO
+                {
+                    Id = Prerequisite.PreRequisite.Id,
+                    Code = Prerequisite.PreRequisite.CourseCode,
+                    Title = Prerequisite.PreRequisite.Title
+                };
+                dtoCoursePrerequisite.Prerequisite = PrerequisiteDTO;
+                dtoList.Add(dtoCoursePrerequisite);
+            };
+            return new ObjectResult(dtoList);
         }
     }
 }
