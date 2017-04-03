@@ -239,16 +239,18 @@ namespace ScottRafael_NSCCCourseMap.Controllers
                         .AsNoTracking()
                         .SingleOrDefaultAsync(m => m.Id == id);
 
+            if (Concentration == null)
+            {
+                return NotFound();
+            }
+
             ConcentrationDTO dtoConcentration = new ConcentrationDTO {
                     Id = Concentration.Id,
                     Title = Concentration.Title,
                     CollegeProgram = Concentration.Program.Title,
             };
 
-            if (Concentration == null)
-            {
-                return NotFound();
-            }
+           
 
             return new ObjectResult(dtoConcentration);
         }

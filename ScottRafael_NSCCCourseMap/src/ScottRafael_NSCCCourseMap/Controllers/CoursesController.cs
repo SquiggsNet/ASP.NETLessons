@@ -266,6 +266,11 @@ namespace ScottRafael_NSCCCourseMap.Controllers
                         .AsNoTracking()
                         .SingleOrDefaultAsync(c => c.Id == id);
 
+            if (Course == null)
+            {
+                return NotFound();
+            }
+
             var CoursePreRequisites = await _context.CoursePreRequisites
                                            .Where(c => c.CourseId.Equals(id))
                                            .Include(c => c.PreRequisite)
@@ -314,10 +319,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
             };
             CourseFullDTO.IsPreRequisitesFor = PreRequisiteForDtoList;
 
-            if (Course == null)
-            {
-                return NotFound();
-            }
+            
 
             return new ObjectResult(CourseFullDTO);
         }

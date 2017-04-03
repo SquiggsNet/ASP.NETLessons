@@ -323,6 +323,11 @@ namespace ScottRafael_NSCCCourseMap.Controllers
                                     .AsNoTracking()
                                     .SingleOrDefaultAsync(c => c.Id == id);
 
+            if (CourseOffering == null)
+            {
+                return NotFound();
+            }
+
             CourseOfferingsDTO dtoCourseOffering = new CourseOfferingsDTO
             {
                 Id = CourseOffering.Id,

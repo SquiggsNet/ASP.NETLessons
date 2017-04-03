@@ -236,6 +236,11 @@ namespace ScottRafael_NSCCCourseMap.Controllers
                         .AsNoTracking()
                         .SingleOrDefaultAsync(m => m.Id == id);
 
+            if (AcademicYear == null)
+            {
+                return NotFound();
+            }
+
             var dtoAcademicYear = new AcademicYearDTO
             {
                 Id = AcademicYear.Id,
@@ -243,7 +248,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
             };
 
             List<SemesterDTO> semesterDtoList = new List<SemesterDTO>();
-            foreach (var Semester in AcademicYear.Semesters.OrderBy(s => s.StartDate))
+            foreach (var Semester in AcademicYear.Semesters.OrderByDescending(s => s.StartDate))
             {
                 var dtoSemester = new SemesterDTO
                 {
@@ -257,10 +262,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
 
             dtoAcademicYear.Semesters = semesterDtoList;
 
-            if (AcademicYear == null)
-            {
-                return NotFound();
-            }
+
 
             return new ObjectResult(dtoAcademicYear);
         }

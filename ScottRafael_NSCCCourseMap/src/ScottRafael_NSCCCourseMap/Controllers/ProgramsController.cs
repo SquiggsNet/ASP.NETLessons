@@ -220,6 +220,11 @@ namespace ScottRafael_NSCCCourseMap.Controllers
                         .AsNoTracking()
                         .SingleOrDefaultAsync(p => p.Id == id);
 
+            if (Program == null)
+            {
+                return NotFound();
+            }
+
             var dtoProgram = new ProgramFullDTO
             {
                 Id = Program.Id,
@@ -239,10 +244,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
 
             dtoProgram.Concentrations = concentrationDtoList;
 
-            if (Program == null)
-            {
-                return NotFound();
-            }
+            
 
             return new ObjectResult(dtoProgram);
         }

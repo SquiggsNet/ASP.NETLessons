@@ -258,6 +258,11 @@ namespace ScottRafael_NSCCCourseMap.Controllers
                         .AsNoTracking()
                         .SingleOrDefaultAsync(s => s.Id == id);
 
+            if (Semester == null)
+            {
+                return NotFound();
+            }
+
             var SemesterFullDTO = new SemesterFullDTO
             {
                 Id = Semester.Id,
@@ -284,10 +289,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
             };
             SemesterFullDTO.CourseOfferings = courseOfferingDtoList;
 
-            if (Semester == null)
-            {
-                return NotFound();
-            }
+           
 
             return new ObjectResult(SemesterFullDTO);
         }
