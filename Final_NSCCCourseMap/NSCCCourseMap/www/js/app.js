@@ -39,35 +39,44 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   })
 
   // Each tab has its own nav history stack:
-
-  .state('tab.dash', {
-    url: '/dash',
-    views: {
-      'tab-dash': {
-        templateUrl: 'templates/tab-dash.html',
-        controller: 'DashCtrl'
-      }
-    }
-  })
-
-  .state('tab.chats', {
-      url: '/chats',
+  .state('tab.AcademicYears', {
+      url: '/AcademicYears',
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/tab-chats.html',
-          controller: 'ChatsCtrl'
+        'tab-AcademicYears': {
+          templateUrl: 'templates/AcademicYears.html',
+          controller: 'AcademicYearsCtrl'
         }
       }
     })
-    .state('tab.chat-detail', {
-      url: '/chats/:chatId',
+    .state('tab.AcademicYear', {
+      url: '/AcademicYears/:AcademicYearsId',
       views: {
-        'tab-chats': {
-          templateUrl: 'templates/chat-detail.html',
-          controller: 'ChatDetailCtrl'
+        'tab-AcademicYears': {
+          templateUrl: 'templates/AcademicYear.html',
+          controller: 'AcademicYearCtrl'
         }
       }
     })
+
+  .state('tab.Programs', {
+      url: '/Programs',
+      views: {
+        'tab-Programs': {
+          templateUrl: 'templates/Programs.html',
+          controller: 'ProgramsCtrl'
+        }
+      }
+    })
+    .state('tab.Program', {
+      url: '/Programs/:Programs',
+      views: {
+        'tab-Programs': {
+          templateUrl: 'templates/Program.html',
+          controller: 'ProgramCtrl'
+        }
+      }
+    })
+
 
   .state('tab.account', {
     url: '/account',
@@ -80,6 +89,6 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
   });
 
   // if none of the above states are matched, use this as the fallback
-  $urlRouterProvider.otherwise('/tab/dash');
+  $urlRouterProvider.otherwise('/tab/AcademicYears');
 
 });

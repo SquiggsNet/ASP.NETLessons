@@ -1,24 +1,19 @@
-angular.module('starter.controllers', [])
+angular.module('starter.controllers', ['starter.services'])
 
-.controller('DashCtrl', function($scope) {})
-
-.controller('ChatsCtrl', function($scope, Chats) {
-  // With the new view caching in Ionic, Controllers are only called
-  // when they are recreated or on app start, instead of every page change.
-  // To listen for when this page is active (for example, to refresh data),
-  // listen for the $ionicView.enter event:
-  //
-  //$scope.$on('$ionicView.enter', function(e) {
-  //});
-
-  $scope.chats = Chats.all();
-  $scope.remove = function(chat) {
-    Chats.remove(chat);
-  };
+.controller('AcademicYearsCtrl', function($scope, AcademicYear){
+    $scope.academicYears = AcademicYear.query();
 })
 
-.controller('ChatDetailCtrl', function($scope, $stateParams, Chats) {
-  $scope.chat = Chats.get($stateParams.chatId);
+.controller('AcademicYearCtrl', function($scope, $stateParams ,AcademicYear){
+    $scope.academicYear = AcademicYear.get({AcademicYearId: $stateParams.AcademicYearId});
+})
+
+.controller('ProgramsCtrl', function($scope, Program){
+    $scope.programs = Program.query();
+})
+
+.controller('ProgramCtrl', function($scope, $stateParams ,Program){
+    $scope.program = Program.get({ProgramId: $stateParams.ProgramId});
 })
 
 .controller('AccountCtrl', function($scope) {
