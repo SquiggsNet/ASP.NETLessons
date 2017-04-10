@@ -68,7 +68,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
     })
     .state('tab.AcaCourse', {
-      url: '/Courses/:CoursesId',
+      url: '/ACourses/:CoursesId',
       views: {
         'tab-AcademicYears': {
           templateUrl: 'templates/Course.html',
@@ -106,9 +106,28 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
     })
     .state('tab.ProgCourse', {
-      url: '/Courses/:CoursesId',
+      url: '/PCourses/:CoursesId',
       views: {
         'tab-Programs': {
+          templateUrl: 'templates/Course.html',
+          controller: 'CourseCtrl'
+        }
+      }
+    })
+
+    .state('tab.Courses', {
+      url: '/Courses',
+      views: {
+        'tab-Courses': {
+          templateUrl: 'templates/Courses.html',
+          controller: 'CoursesCtrl'
+        }
+      }
+    })
+    .state('tab.CoursesCourse', {
+      url: '/Courses/:CoursesId',
+      views: {
+        'tab-Courses': {
           templateUrl: 'templates/Course.html',
           controller: 'CourseCtrl'
         }

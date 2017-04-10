@@ -26,4 +26,8 @@ angular.module('starter.controllers', ['starter.services'])
 
 .controller('ConcentrationCtrl', function($scope, $stateParams ,Concentration){
     $scope.concentration = Concentration.get({ConcentrationsId: $stateParams.ConcentrationsId});
+})
+
+.controller('CoursesCtrl', function($scope ,Course){
+    $scope.courses = Course.query();
 });
