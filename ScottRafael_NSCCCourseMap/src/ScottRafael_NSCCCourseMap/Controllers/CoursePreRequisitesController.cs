@@ -10,6 +10,7 @@ using ScottRafael_NSCCCourseMap.Models;
 using ScottRafael_NSCCCourseMap.Models.NSCCCourseMapViewModels;
 using Microsoft.AspNetCore.Authorization;
 using ScottRafael_NSCCCourseMap.Models.DTOs;
+using Microsoft.AspNetCore.Cors;
 
 namespace ScottRafael_NSCCCourseMap.Controllers
 {
@@ -192,6 +193,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("api/CoursePrerequisites")]
+        [EnableCors("AllowAllOrigins")]
         public async Task<IActionResult> GetCoursePrerequisites()
         {
             //return a list of course offerings
@@ -240,6 +242,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("api/CoursePrerequisites/forcourse/{id}")]
+        [EnableCors("AllowAllOrigins")]
         public async Task<IActionResult> GetCoursePrerequisitesFor(int? id)
         {
             //return a list of course offerings
@@ -289,6 +292,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("api/CoursePrerequisites/{id}/isprerequisitefor")]
+        [EnableCors("AllowAllOrigins")]
         public async Task<IActionResult> GetCoursePrerequisitesIs(int? id)
         {
             //return a list of course offerings

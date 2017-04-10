@@ -9,6 +9,7 @@ using ScottRafael_NSCCCourseMap.Data;
 using ScottRafael_NSCCCourseMap.Models;
 using Microsoft.AspNetCore.Authorization;
 using ScottRafael_NSCCCourseMap.Models.DTOs;
+using Microsoft.AspNetCore.Cors;
 
 namespace ScottRafael_NSCCCourseMap.Controllers
 {
@@ -197,6 +198,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("api/Concentrations")]
+        [EnableCors("AllowAllOrigins")]
         public async Task<IActionResult> GetConcentrations()
         {
             //return a list of concentrations
@@ -232,6 +234,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("api/Concentrations/{id}")]
+        [EnableCors("AllowAllOrigins")]
         public async Task<IActionResult> GetConcentration(int? id)
         {
             var Concentration = await _context.Concentrations

@@ -10,6 +10,7 @@ using ScottRafael_NSCCCourseMap.Models;
 using ScottRafael_NSCCCourseMap.Models.NSCCCourseMapViewModels;
 using Microsoft.AspNetCore.Authorization;
 using ScottRafael_NSCCCourseMap.Models.DTOs;
+using Microsoft.AspNetCore.Cors;
 
 namespace ScottRafael_NSCCCourseMap.Controllers
 {
@@ -273,6 +274,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("api/CourseOfferings")]
+        [EnableCors("AllowAllOrigins")]
         public async Task<IActionResult> GetCourseOfferings()
         {
             //return a list of course offerings
@@ -314,6 +316,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("api/CoursesOfferings/{id}")]
+        [EnableCors("AllowAllOrigins")]
         public async Task<IActionResult> GetCourseOffering(int? id)
         {
             var CourseOffering = await _context.CourseOfferings
@@ -358,6 +361,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("api/CoursesOfferings/Course/{id}")]
+        [EnableCors("AllowAllOrigins")]
         public async Task<IActionResult> GetCourseOfferingForCourse(int? id)
         {
             //return a list of course offerings
@@ -400,6 +404,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("api/CoursesOfferings/Semester/{id}")]
+        [EnableCors("AllowAllOrigins")]
         public async Task<IActionResult> GetCourseOfferingForSemester(int? id)
         {
             //return a list of course offerings
@@ -442,6 +447,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("api/CoursesOfferings/Concentration/{id}")]
+        [EnableCors("AllowAllOrigins")]
         public async Task<IActionResult> GetCourseOfferingForConcentration(int? id)
         {
             //return a list of course offerings

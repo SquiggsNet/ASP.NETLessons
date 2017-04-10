@@ -10,6 +10,7 @@ using ScottRafael_NSCCCourseMap.Models;
 using Microsoft.AspNetCore.Authorization;
 using ScottRafael_NSCCCourseMap.Models.NSCCCourseMapViewModels;
 using ScottRafael_NSCCCourseMap.Models.DTOs;
+using Microsoft.AspNetCore.Cors;
 
 namespace ScottRafael_NSCCCourseMap.Controllers
 {
@@ -227,6 +228,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("api/Courses")]
+        [EnableCors("AllowAllOrigins")]
         public async Task<IActionResult> GetCourses()
         {
             //return a list of concentrations
@@ -260,6 +262,7 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         [HttpGet]
         [AllowAnonymous]
         [Route("api/Courses/{id}")]
+        [EnableCors("AllowAllOrigins")]
         public async Task<IActionResult> GetCourse(int? id)
         {
             var Course = await _context.Courses

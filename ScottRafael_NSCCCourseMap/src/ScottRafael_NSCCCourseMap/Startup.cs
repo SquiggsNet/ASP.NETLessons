@@ -54,6 +54,11 @@ namespace ScottRafael_NSCCCourseMap
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
 
+            services.AddCors(options => options.AddPolicy("AllowAllOrigins", builder =>
+                {
+                    builder.AllowAnyOrigin();
+                }));
+
             services.AddMvc();
 
             services.AddLogging();
