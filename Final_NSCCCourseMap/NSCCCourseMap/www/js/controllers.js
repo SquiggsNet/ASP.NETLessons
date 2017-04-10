@@ -5,7 +5,15 @@ angular.module('starter.controllers', ['starter.services'])
 })
 
 .controller('AcademicYearCtrl', function($scope, $stateParams ,AcademicYear){
-    $scope.academicYear = AcademicYear.get({AcademicYearId: $stateParams.AcademicYearId});
+    $scope.academicYear = AcademicYear.get({AcademicYearsId: $stateParams.AcademicYearsId});
+})
+
+.controller('SemesterCtrl', function($scope, $stateParams ,Semester){
+    $scope.semester = Semester.get({SemestersId: $stateParams.SemestersId});
+})
+
+.controller('CourseCtrl', function($scope, $stateParams ,Course){
+    $scope.course = Course.get({CoursesId: $stateParams.CoursesId});
 })
 
 .controller('ProgramsCtrl', function($scope, Program){
@@ -13,11 +21,9 @@ angular.module('starter.controllers', ['starter.services'])
 })
 
 .controller('ProgramCtrl', function($scope, $stateParams ,Program){
-    $scope.program = Program.get({ProgramId: $stateParams.ProgramId});
+    $scope.program = Program.get({ProgramsId: $stateParams.ProgramsId});
 })
 
-.controller('AccountCtrl', function($scope) {
-  $scope.settings = {
-    enableFriends: true
-  };
+.controller('ConcentrationCtrl', function($scope, $stateParams ,Concentration){
+    $scope.concentration = Concentration.get({ConcentrationsId: $stateParams.ConcentrationsId});
 });

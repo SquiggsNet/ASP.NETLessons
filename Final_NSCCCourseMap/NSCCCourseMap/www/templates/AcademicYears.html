@@ -1,15 +1,10 @@
 <ion-view view-title="Academic Years">
   <ion-content>
     <ion-list>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="academicYear in academicYears" type="item-text-wrap" href="#/tab/AcademicYears/{{academicYear.id}}">
-        <!--<img ng-src="{{chat.face}}">-->
+      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="academicYear in academicYears"
+                                           type="item-text-wrap" href="#/tab/AcademicYears/{{academicYear.id}}">
         <h2>{{academicYear.title}}</h2>
-        <!--<p>{{chat.lastText}}</p>-->
         <i class="icon ion-chevron-right icon-accessory"></i>
-
-        <!--<ion-option-button class="button-assertive" ng-click="remove(chat)">
-          Delete
-        </ion-option-button>-->
       </ion-item>
     </ion-list>
   </ion-content>

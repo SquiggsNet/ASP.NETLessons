@@ -1,0 +1,11 @@
+<ion-view view-title="{{semester.name}}">
+  <ion-content>
+   <ion-list>
+     <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="course in semester.courseOfferings" type="item-text-wrap" href="#/tab/Courses/{{course.courseId}}">
+     
+        <h2>{{course.courseTitle}}</h2>
+        <i class="icon ion-chevron-right icon-accessory"></i>
+      </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-view>

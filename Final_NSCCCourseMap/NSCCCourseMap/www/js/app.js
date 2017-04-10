@@ -58,6 +58,25 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
     })
 
+    .state('tab.Semester', {
+      url: '/Semesters/:SemestersId',
+      views: {
+        'tab-AcademicYears': {
+          templateUrl: 'templates/Semester.html',
+          controller: 'SemesterCtrl'
+        }
+      }
+    })
+    .state('tab.AcaCourse', {
+      url: '/Courses/:CoursesId',
+      views: {
+        'tab-AcademicYears': {
+          templateUrl: 'templates/Course.html',
+          controller: 'CourseCtrl'
+        }
+      }
+    })
+
   .state('tab.Programs', {
       url: '/Programs',
       views: {
@@ -68,7 +87,7 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
     })
     .state('tab.Program', {
-      url: '/Programs/:Programs',
+      url: '/Programs/:ProgramsId',
       views: {
         'tab-Programs': {
           templateUrl: 'templates/Program.html',
@@ -77,16 +96,24 @@ angular.module('starter', ['ionic', 'starter.controllers', 'starter.services'])
       }
     })
 
-
-  .state('tab.account', {
-    url: '/account',
-    views: {
-      'tab-account': {
-        templateUrl: 'templates/tab-account.html',
-        controller: 'AccountCtrl'
+.state('tab.Concentration', {
+      url: '/Concentrations/:ConcentrationsId',
+      views: {
+        'tab-Programs': {
+          templateUrl: 'templates/Concentration.html',
+          controller: 'ConcentrationCtrl'
+        }
       }
-    }
-  });
+    })
+    .state('tab.ProgCourse', {
+      url: '/Courses/:CoursesId',
+      views: {
+        'tab-Programs': {
+          templateUrl: 'templates/Course.html',
+          controller: 'CourseCtrl'
+        }
+      }
+    })
 
   // if none of the above states are matched, use this as the fallback
   $urlRouterProvider.otherwise('/tab/AcademicYears');
