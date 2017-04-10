@@ -238,6 +238,10 @@ namespace ScottRafael_NSCCCourseMap.Controllers
         public async Task<IActionResult> GetConcentration(int? id)
         {
             var Concentration = await _context.Concentrations
+                        .Include(c => c.CourseOfferings)
+                            .ThenInclude(c => c.Course)
+                        .Include(c => c.CourseOfferings)
+                            .ThenInclude(c => c.Semester)
                         .Include(c => c.Program)
                         .AsNoTracking()
                         .SingleOrDefaultAsync(m => m.Id == id);
@@ -247,15 +251,33 @@ namespace ScottRafael_NSCCCourseMap.Controllers
                 return NotFound();
             }
 
-            ConcentrationDTO dtoConcentration = new ConcentrationDTO {
+            var ConcentrationFullDTO = new ConcentrationFullDTO
+            {
                     Id = Concentration.Id,
                     Title = Concentration.Title,
                     CollegeProgram = Concentration.Program.Title,
             };
+            List<CourseOfferingsDTO> courseOfferingDtoList = new List<CourseOfferingsDTO>();
+            foreach (var courseOffering in Concentration.CourseOfferings)
+            {
+                var CourseOfferingsDTO = new CourseOfferingsDTO
+                {
+                    Id = courseOffering.Id,
+                    CourseId = courseOffering.CourseId,
+                    CourseTitle = courseOffering.Course.Title,
+                    ConcentrationId = courseOffering.ConcentrationId,
+                    ConcentrationTitle = courseOffering.Concentration.Title,
+                    SemesterId = courseOffering.SemesterId,
+                    SemesterName = courseOffering.Semester.Name,
+                    IsCampusCourse = courseOffering.IsCampusCourse
+                };
+                courseOfferingDtoList.Add(CourseOfferingsDTO);
+            };
+            ConcentrationFullDTO.CourseOfferings = courseOfferingDtoList;
 
-           
 
-            return new ObjectResult(dtoConcentration);
+
+            return new ObjectResult(ConcentrationFullDTO);
         }
     }
 }
