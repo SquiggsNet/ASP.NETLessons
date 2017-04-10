@@ -1,7 +1,7 @@
 <ion-view view-title={{academicYear.title}}>
   <ion-content>
    <ion-list>
-     <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="semester in academicYear.semesters" type="item-text-wrap" href="#/tab/Semesters/{{semester.id}}">
+     <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="semester in academicYear.semesters | orderBy : 'startDate'" type="item-text-wrap" href="#/tab/Semesters/{{semester.id}}">
         <h2>{{semester.name}}</h2>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
