@@ -1,7 +1,7 @@
 <ion-view view-title="Programs">
   <ion-content>
     <ion-list>
-      <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="program in programs" type="item-text-wrap" href="#/tab/Programs/{{program.id}}">
+      <ion-item class="item-remove-animate item-icon-right" ng-repeat="program in programs | orderBy : 'program.title'" type="item-text-wrap" href="#/tab/Programs/{{program.id}}">
         <!--<img ng-src="{{chat.face}}">-->
         <h2>{{program.title}}</h2>
         <!--<p>{{chat.lastText}}</p>-->

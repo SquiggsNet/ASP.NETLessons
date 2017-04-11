@@ -1,7 +1,7 @@
 <ion-view view-title={{program.title}}>
   <ion-content>
    <ion-list>
-     <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="concentration in program.concentrations" type="item-text-wrap" href="#/tab/Concentrations/{{concentration.id}}">
+     <ion-item class="item-remove-animate item-icon-right" ng-repeat="concentration in program.concentrations | orderBy : concentration.title" type="item-text-wrap" href="#/tab/Concentrations/{{concentration.id}}">
         <h2>{{concentration.title}}</h2>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>

@@ -1,7 +1,27 @@
 <ion-view view-title={{course.title}}>
   <ion-content>
-
-     <h2>{{course.title}}</h2>
-
+    <div class="card">
+      <div class="item item-text-wrap">
+        <h1>{{course.code}}</h1>
+        <p>{{course.title}}</p>
+      </div>
+      <div class="item item-text-wrap">
+        <h3>Prerequisites</h3>
+          <div class="padding-vertical">
+            <div ng-repeat="prerequisite in course.preRequisites | orderBy : 'prerequisite.code'" type="item-text-wrap">
+              <p>{{prerequisite.code}} - {{prerequisite.title}}</p>
+            </div>
+            <p ng-show="!course.preRequisites.length">None</p>
+          </div>
+      
+        <h3>Is Prerequisite for</h3>
+          <div class="padding-vertical">
+            <div ng-repeat="prerequisiteFor in course.isPreRequisitesFor | orderBy : 'prerequisiteFor.code'" type="item-text-wrap">
+              <p>{{prerequisiteFor.code}} - {{prerequisiteFor.title}}</p>
+            </div>
+            <p ng-show="!course.isPreRequisitesFor.length">None</p>
+          </div>
+      </div>
+    </div>
   </ion-content>
 </ion-view>
