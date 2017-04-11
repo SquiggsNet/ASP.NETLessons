@@ -1,8 +1,13 @@
 <ion-view view-title="Courses">
   <ion-content>
+    <label class="item item-input">
+      <i class="icon ion-search placeholder-icon" ></i>
+      <input type="search" placeholder="search" ng-model="searchQuery"/>
+    </label>
+
    <ion-list>
-     <ion-item class="item-remove-animate item-avatar item-icon-right" ng-repeat="course in courses" type="item-text-wrap" href="#/tab/Courses/{{course.id}}">
-        <h2>{{course.title}}</h2>
+     <ion-item class="item-remove-animate item-icon-right" ng-repeat="course in courses | orderBy :'code' | filter:searchQuery" type="item-text-wrap" href="#/tab/Courses/{{course.id}}">
+        <h2>{{course.code}} - {{course.title}}</h2>
         <i class="icon ion-chevron-right icon-accessory"></i>
       </ion-item>
     </ion-list>
